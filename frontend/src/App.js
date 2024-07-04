@@ -10,7 +10,19 @@ import MusicPlayer from './components/MusicPlayer';
 
 function App() {
 
-  const [currentSong, setCurrentSong] = useState(null);
+  const [currentSongIndex, setCurrentSongIndex] = useState(null);
+  const [songs, setSongs] = useState([
+    { url: 'path/to/song1.mp3', title: 'Song 1', artist: 'Artist 1' },
+    { url: 'path/to/song2.mp3', title: 'Song 2', artist: 'Artist 2' },
+  ]);
+
+  const setCurrentSong = (index) => {
+    setCurrentSongIndex(index);
+  };
+
+  const nextSong = () => {
+    setCurrentSongIndex((prevIndex) => (prevIndex + 1) % songs.length);
+  };
 
   return (
     <Router>
@@ -23,7 +35,12 @@ function App() {
           <Route path="/search" component={() => <Search setCurrentSong={setCurrentSong} />} />
           <Route path="/playlists" component={Playlist} />
         </Switch>
-        {currentSong && <MusicPlayer song={currentSong} />}
+        {songs.length > 0 && (
+          <MusicPlayer
+            song={songs[currentSongIndex]}
+            onSkip={nextSong}
+          />
+        )}
       </div>
     </Router>
   );
